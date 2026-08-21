@@ -83,7 +83,7 @@ export const products: Product[] = [
     status: "active",
     rating: 4.6,
     reviewCount: 78,
-    images: [img("photo-1549298916-b41d501d3772"), img("photo-1495555961986-6d4c1ecb7be3")],
+    images: [img("photo-1549298916-b41d501d3772")],
     colorIds: ["beige", "black"],
     sizeIds: ["38","39","40","41","42","43","44"],
     variants: makeVariants(["beige", "black"], ["38","39","40","41","42","43","44"]),
