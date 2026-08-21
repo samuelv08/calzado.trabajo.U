@@ -55,7 +55,7 @@ export const products: Product[] = [
     status: "active",
     rating: 4.8,
     reviewCount: 124,
-    images: baseImages,
+    images: [baseImages[0], baseImages[2]],
     colorIds: ["black", "white", "blue"],
     sizeIds: sizes.map((s) => s.id),
     variants: makeVariants(["black", "white", "blue"]),
