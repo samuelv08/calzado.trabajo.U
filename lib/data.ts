@@ -25,7 +25,7 @@ const img = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=c
 
 const baseImages = [
   img("photo-1542291026-7eec264c27ff"),
-  img("photo-1551488831-00ddcb6c6bd3"),
+  img("photo-1549298916-b41d501d3772"),
   img("photo-1543508282-6319a3e2621f")
 ];
 
