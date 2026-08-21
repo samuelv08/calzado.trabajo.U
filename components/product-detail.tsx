@@ -5,21 +5,19 @@ import Link from "next/link";
 import { Check, Heart, Minus, Plus, ShieldCheck, ShoppingBag, Star, Truck } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { Product } from "@/types";
-import { colors, sizes } from "@/lib/data";
+import { sizes } from "@/lib/data";
 import { discountPercent, formatCOP } from "@/lib/utils";
 import { useStore } from "@/lib/store";
 import { ProductCard } from "@/components/product-card";
 
 export function ProductDetail({ product, related }: { product: Product; related: Product[] }) {
   const [activeImage, setActiveImage] = useState(0);
-  const [colorId, setColorId] = useState(product.colorIds[0]);
   const [sizeId, setSizeId] = useState(product.sizeIds[0]);
   const [quantity, setQuantity] = useState(1);
   const { addToCart, isFavorite, toggleFavorite } = useStore();
 
-  const variant = useMemo(() => product.variants.find((v) => v.colorId === colorId && v.sizeId === sizeId), [product, colorId, sizeId]);
+  const variant = useMemo(() => product.variants.find((v) => v.sizeId === sizeId), [product, sizeId]);
   const discount = discountPercent(product.price, product.previousPrice);
-  const selectedColor = colors.find((c) => c.id === colorId);
   const reviews = product.reviews ?? [];
 
   return (
@@ -43,9 +41,9 @@ export function ProductDetail({ product, related }: { product: Product; related:
           <div className="mt-5 flex items-center gap-3"><span className="text-2xl font-bold">{formatCOP(product.price)}</span>{product.previousPrice && <><span className="text-neutral-400 line-through">{formatCOP(product.previousPrice)}</span><span className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-bold">-{discount}%</span></>}</div>
           <p className="mt-5 leading-7 text-neutral-600">{product.description}</p>
 
-          <div className="mt-8"><div className="flex items-center justify-between"><span className="text-sm font-bold">Color</span><span className="text-sm text-neutral-500">{selectedColor?.name}</span></div><div className="mt-3 flex flex-wrap gap-3">{product.colorIds.map((id) => { const c = colors.find((x) => x.id === id)!; return <button key={id} onClick={() => setColorId(id)} title={c.name} className={`grid size-10 place-items-center rounded-full border-2 ${colorId === id ? "border-black" : "border-transparent"}`}><span className="size-7 rounded-full border border-black/10" style={{ background: c.hex }} /></button> })}</div></div>
+          
 
-          <div className="mt-7"><div className="flex items-center justify-between"><span className="text-sm font-bold">Talla</span><span className="text-xs text-neutral-500">Selecciona tu talla</span></div><div className="mt-3 grid grid-cols-5 gap-2">{product.sizeIds.map((id) => { const v = product.variants.find((x) => x.colorId === colorId && x.sizeId === id); const available = Boolean(v && v.stock > 0); return <button key={id} disabled={!available} onClick={() => setSizeId(id)} className={`rounded-xl border py-3 text-sm font-semibold ${sizeId === id && available ? "border-black bg-black text-white" : "border-neutral-200"} ${!available ? "cursor-not-allowed opacity-35 line-through" : ""}`}>{id}</button> })}</div>{variant && <p className="mt-3 text-xs text-neutral-500">{variant.stock > 0 ? `${variant.stock} unidades disponibles` : "Agotado"}</p>}</div>
+          <div className="mt-7"><div className="flex items-center justify-between"><span className="text-sm font-bold">Talla</span><span className="text-xs text-neutral-500">Selecciona tu talla</span></div><div className="mt-3 grid grid-cols-5 gap-2">{product.sizeIds.map((id) => { const v = product.variants.find((x) => x.sizeId === id); const available = Boolean(v && v.stock > 0); return <button key={id} disabled={!available} onClick={() => setSizeId(id)} className={`rounded-xl border py-3 text-sm font-semibold ${sizeId === id && available ? "border-black bg-black text-white" : "border-neutral-200"} ${!available ? "cursor-not-allowed opacity-35 line-through" : ""}`}>{id}</button> })}</div>{variant && <p className="mt-3 text-xs text-neutral-500">{variant.stock > 0 ? `${variant.stock} unidades disponibles` : "Agotado"}</p>}</div>
 
           <div className="mt-7 flex gap-3"><div className="flex items-center rounded-full border border-neutral-200"><button onClick={() => setQuantity(Math.max(1, quantity-1))} className="px-4"><Minus size={16}/></button><span className="w-8 text-center text-sm">{quantity}</span><button onClick={() => setQuantity(quantity+1)} className="px-4"><Plus size={16}/></button></div><button disabled={!variant || variant.stock === 0} onClick={() => variant && addToCart({ productId: product.id, variantId: variant.id, quantity })} className="button-primary flex-1 disabled:cursor-not-allowed disabled:opacity-40"><ShoppingBag size={18}/> Agregar al carrito</button></div>
           <Link href="/checkout" className="button-secondary mt-3 w-full">Comprar ahora</Link>
